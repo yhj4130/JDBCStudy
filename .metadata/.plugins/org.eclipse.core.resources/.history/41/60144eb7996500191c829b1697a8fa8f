@@ -1,0 +1,12 @@
+/*===========================
+   DBConn.java
+   - try ~ catch 로 예외 처리
+===========================*/
+
+
+package com.util;
+
+public class DBConn
+{
+
+}

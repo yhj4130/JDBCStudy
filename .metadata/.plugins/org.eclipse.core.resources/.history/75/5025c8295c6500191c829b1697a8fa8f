@@ -1,0 +1,17 @@
+/*==============================
+  Test004.java
+  - 테이블 내의 데이터 읽어오기
+==============================*/
+
+package com.test;
+
+import com.util.DBConn;
+
+public class Test004
+{
+	public static void main(String[] args)
+	{
+		Connection conn = DBConn.getConnection();
+	}
+
+}

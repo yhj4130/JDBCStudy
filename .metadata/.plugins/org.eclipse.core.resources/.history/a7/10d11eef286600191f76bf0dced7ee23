@@ -1,0 +1,15 @@
+package com.test;
+
+import java.sql.Connection;
+
+import com.util.DBConn;
+
+public class ScoreDAO
+{
+	private Connection conn;
+	
+	public ScoreDAO() 
+	{
+		conn = DBConn.getConnection();
+	}
+}

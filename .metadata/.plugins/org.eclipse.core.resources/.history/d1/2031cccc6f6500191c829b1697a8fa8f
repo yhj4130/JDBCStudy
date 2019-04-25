@@ -1,0 +1,11 @@
+/*==================
+	MemberDTO.java
+==================*/
+
+package com.test;
+
+public class MemberDTO
+{
+	// 주요 속성 구성
+	private String sid, name, tel;
+}

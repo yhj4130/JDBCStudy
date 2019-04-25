@@ -1,0 +1,23 @@
+package com.test;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.util.DBConn;
+
+public class ScoreDAO
+{
+	private Connection conn;
+	
+	public ScoreDAO() {
+		conn = DBConn.getConnection();
+	}
+	
+	public int add(ScoreDTO dto) throws SQLException
+	{
+		int result;
+		
+		Statement stmt = conn.createStatement();
+	}
+}

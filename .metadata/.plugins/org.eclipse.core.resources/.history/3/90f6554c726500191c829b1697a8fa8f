@@ -1,0 +1,17 @@
+/*==================
+	MemberDAO.java
+==================*/
+
+// Database 에 Access 하는 기능
+// → DBConn 활용
+
+// 데이터를 입력하는 기능 → insert
+
+// 대상 테이블(TBL_MEMBER)의 레코드 카운팅 기능
+
+package com.test;
+
+public class MemberDAO
+{
+
+}

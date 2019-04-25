@@ -1,0 +1,7 @@
+package com.test;
+
+public class ScoreDAO
+{
+	private String name;
+	private int kor, eng, mat, tot, avg;
+}

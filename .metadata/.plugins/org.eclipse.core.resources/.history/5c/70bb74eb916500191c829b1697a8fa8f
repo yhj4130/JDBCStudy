@@ -1,0 +1,26 @@
+package com.test;
+
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class MemberMain
+{
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		try
+		{
+			MemberDAO dao = new MemberDAO();
+			
+			System.out.print("이름 전화번호 입력() : ");
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		} 
+		
+		
+		
+	}
+}

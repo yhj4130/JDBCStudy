@@ -1,0 +1,93 @@
+package com.test;
+
+public class MemberDTO
+{
+	private String name, ssn, ibsadate, tel;
+	private int sid, city, buseo, jikwi, basicpay, sudang;
+	
+	public String getName()
+	{
+		return name;
+	}
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	public String getSsn()
+	{
+		return ssn;
+	}
+	public void setSsn(String ssn)
+	{
+		this.ssn = ssn;
+	}
+	public String getIbsadate()
+	{
+		return ibsadate;
+	}
+	public void setIbsadate(String ibsadate)
+	{
+		this.ibsadate = ibsadate;
+	}
+	public String getTe()
+	{
+		return te;
+	}
+	public void setTe(String te)
+	{
+		this.te = te;
+	}
+	public int getSid()
+	{
+		return sid;
+	}
+	public void setSid(int sid)
+	{
+		this.sid = sid;
+	}
+	public int getCity()
+	{
+		return city;
+	}
+	public void setCity(int city)
+	{
+		this.city = city;
+	}
+	public int getBuseo()
+	{
+		return buseo;
+	}
+	public void setBuseo(int buseo)
+	{
+		this.buseo = buseo;
+	}
+	public int getJikwi()
+	{
+		return jikwi;
+	}
+	public void setJikwi(int jikwi)
+	{
+		this.jikwi = jikwi;
+	}
+	public int getBasicpay()
+	{
+		return basicpay;
+	}
+	public void setBasicpay(int basicpay)
+	{
+		this.basicpay = basicpay;
+	}
+	public int getSudang()
+	{
+		return sudang;
+	}
+	public void setSudang(int sudang)
+	{
+		this.sudang = sudang;
+	}
+	
+	
+	
+	
+	
+}

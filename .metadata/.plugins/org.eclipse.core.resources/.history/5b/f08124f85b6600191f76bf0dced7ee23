@@ -1,0 +1,9 @@
+package com.test;
+
+public class MemberDTO
+{
+	private String sid, name, ssn, ibsadate;
+	private int city, tel, buseo, jikwi, basicpay, sudang;
+	
+	
+}

@@ -1,0 +1,381 @@
+/*============================================
+	MemberProcess.java
+	- 콘솔 기반 서브 메뉴 입츨력 전용 클래스
+============================================*/
+
+package com.test;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import com.util.DBConn;
+
+public class MemberProcess
+{
+	private MemberDAO dao;
+	
+	// 생성자 정의
+	public MemberProcess()
+	{
+		dao = new MemberDAO();
+	}
+	
+	
+	// 직원 정보 입력
+	public void memberInsert()
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		try
+		{
+			// 데이터베이스 연결
+			dao.connection();
+			
+			// 지역 리스트 구성
+			ArrayList<String> citys = dao.selectCity();
+			StringBuilder cityStr = new StringBuilder();
+			for (String city : citys)
+				cityStr.append(city + "/");
+			
+			// 부서 리스트 구성
+			ArrayList<String> buseos = dao.selectBuseo();
+			StringBuilder buseoStr = new StringBuilder();
+			for (String buseo : buseos)
+				buseoStr.append(buseo + "/");
+			
+			// 직위 리스트 구성
+			ArrayList<String> jikwis = dao.selectJikwi();
+			StringBuilder jikwiStr = new StringBuilder();
+			for (String jikwi : jikwis)
+				jikwiStr.append(jikwi + "/");
+			
+			// 사용자에게 보여지는 화면 처리 
+			System.out.println();
+			System.out.println("직원 정보 입력 ---------------------------------------------------------");
+			System.out.print("이름 : ");
+			String empName = sc.next();
+			System.out.print("주민등록번호(yymmdd-nnnnnnn) : ");
+			String ssn = sc.next();
+			System.out.print("입사일(yyyy-mm-dd) : ");
+			String ibsaDate = sc.next();
+			System.out.printf("지역(%s) : ", cityStr.toString());
+			String cityLoc = sc.next();
+			System.out.print("전화번호 : ");
+			String tel = sc.next();
+			System.out.printf("부서(%s) : ", buseoStr.toString());
+			String buseoName = sc.next();
+			System.out.printf("직위(%s) : ", jikwiStr.toString());
+			String jikwiName = sc.next();
+			System.out.printf("기본급(최소 %d 이상) : ", dao.searchBasicPay(jikwiName));
+			int basicPay = sc.nextInt();
+			System.out.print("수당 : ");
+			int sudang = sc.nextInt();
+			System.out.println();
+			
+			MemberDTO dto = new MemberDTO();
+			dto.setEmpname(empName);
+			dto.setSsn(ssn);
+			dto.setIbsaDate(ibsaDate);
+			dto.setCityLoc(cityLoc);
+			dto.setTel(tel);
+			dto.setBuseoName(buseoName);
+			dto.setJikwiName(jikwiName);
+			dto.setBasicPay(basicPay);
+			dto.setSudang(sudang);
+			
+			int result = dao.add(dto);
+			if(result > 0)
+				System.out.println("직원 정보 입력 완료 !!");
+			System.out.println("------------------------------------------------------------------------");
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		
+		finally {
+			try
+			{
+				dao.close();
+			} catch (Exception e2)
+			{
+				System.out.println(e2.toString());
+			}
+		}
+	}//end memberInsert()
+	
+	
+	// 직원 전체 출력
+	public void memberLists() 
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		// 서브 메뉴 출력
+		System.out.println();
+		System.out.println("1. 사번 정렬");				// EMP_ID
+		System.out.println("2. 이름 정렬");				// EMP_NAME
+		System.out.println("3. 부서 정렬");				// BUSEO_NAME
+		System.out.println("4. 직위 정렬");				// JIKWI_NAME
+		System.out.println("5. 급여 내림차순 정렬");	// PAY DESC
+		System.out.print(">> 항목 선택(1~5, -1종료) :");
+		String menuStr = sc.next();
+		
+		try
+		{
+			int menu = Integer.parseInt(menuStr);
+			if (menu == -1)
+				return;
+			
+			String key = "";
+			switch (menu)
+			{
+			case 1: key = "EMP_ID"; break;
+			case 2: key = "EMP_NAME"; break;
+			case 3: key = "BUSEO_NAME"; break;
+			case 4: key = "JIKWI_NAME"; break;
+			case 5: key = "PAY DESC"; break;
+			}
+			
+			// 데이터베이스 연결
+			dao.connection();
+			
+			// 직원 리스트 출력
+			System.out.println();
+			System.out.printf("전체 인원 %d명\n", dao.memberCount());
+			System.out.println("사번	이름	주민번호	입사일	지역	전화번호	부서	직위	기본급	수당	급여");
+			ArrayList<MemberDTO> memList = dao.lists(key);
+			for (MemberDTO memberDTO : memList)
+			{
+				System.out.printf("%3d %5s %5s %7s %4s %7s %4s %4s %9d %4d %4d\n"
+							, memberDTO.getEmpid(), memberDTO.getEmpname(), memberDTO.getSsn(), memberDTO.getIbsaDate(), memberDTO.getCityLoc(), memberDTO.getTel()
+							, memberDTO.getBuseoName(), memberDTO.getJikwiName(), memberDTO.getBasicPay(), memberDTO.getSudang(), memberDTO.getPay());
+			}
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		
+		finally 
+		{
+			try
+			{
+				dao.close();
+				
+			} catch (Exception e2)
+			{
+				System.out.println(e2.toString());
+			}
+		}
+	}// end memberLists()
+	
+	
+	// 직원 검색 출력
+	public void memberSearch()
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		// 서브 메뉴 구성
+		System.out.println();
+		System.out.println("1. 사번 검색");
+		System.out.println("2. 이름 검색");
+		System.out.println("3. 부서 검색");
+		System.out.println("4. 직위 검색");
+		System.out.print(">> 항목 선택(1~4, -1종료) :");
+		String menuStr = sc.next();
+		
+		try
+		{
+			int menu = Integer.parseInt(menuStr);
+			if(menu == -1)
+				return;
+			
+			String key = "";
+			String value = "";
+			
+			switch (menu)
+			{
+			case 1: 
+				key = "EMP_ID"; 
+				System.out.print("검색할 사원번호 입력 : "); 
+				value = sc.next();
+				break;
+			case 2:
+				key = "EMP_NAME"; 
+				System.out.print("검색할 이름 입력 : "); 
+				value = sc.next();
+				break;
+			case 3: 
+				key = "BUSEO_NAME"; 
+				System.out.print("검색할 부서 입력 : "); 
+				value = sc.next();
+				break;
+			case 4: 
+				key = "JIKWI_NAME"; 
+				System.out.print("검색할 직위 입력 : "); 
+				value = sc.next();
+				break;
+			}
+			
+			// 데이터베이스 연결
+			dao.connection();
+			
+			// 검색 결과 출력
+			System.out.println();
+			System.out.printf("검색 인원 %d명\n", dao.memberCount(key, value));
+			System.out.println("사번	이름	주민번호	입사일	지역	전화번호	부서	직위	기본급	수당	급여");
+			ArrayList<MemberDTO> memList = dao.searchLists(key, value);
+			for (MemberDTO memberDTO : memList)
+			{
+				System.out.printf("%3d %5s %5s %7s %4s %7s %4s %4s %9d %4d %4d\n"
+							, memberDTO.getEmpid(), memberDTO.getEmpname(), memberDTO.getSsn(), memberDTO.getIbsaDate(), memberDTO.getCityLoc(), memberDTO.getTel()
+							, memberDTO.getBuseoName(), memberDTO.getJikwiName(), memberDTO.getBasicPay(), memberDTO.getSudang(), memberDTO.getPay());
+			}
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		
+		finally 
+		{
+			try
+			{
+				dao.close();
+				
+			} catch (Exception e2)
+			{
+				System.out.println(e2.toString());
+			}
+		}
+		
+		
+	}//end memberSearch()
+	
+	
+	// 직원 정보 수정
+	public void memberUpdate()
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		try
+		{
+			// 데이터베이스 연결
+			dao.connection();
+			
+			// 지역 리스트 구성
+			ArrayList<String> citys = dao.selectCity();
+			StringBuilder cityStr = new StringBuilder();
+			for (String city : citys)
+				cityStr.append(city + "/");
+			
+			// 부서 리스트 구성
+			ArrayList<String> buseos = dao.selectBuseo();
+			StringBuilder buseoStr = new StringBuilder();
+			for (String buseo : buseos)
+				buseoStr.append(buseo + "/");
+			
+			// 직위 리스트 구성
+			ArrayList<String> jikwis = dao.selectJikwi();
+			StringBuilder jikwiStr = new StringBuilder();
+			for (String jikwi : jikwis)
+				jikwiStr.append(jikwi + "/");
+			
+			
+			// 수정할 대상 입력받기
+			System.out.print("수정할 직원의 사원번호 입력 : ");
+			String value = sc.next();
+			
+			ArrayList<MemberDTO> members = dao.searchLists("EMP_ID", value);
+			
+			MemberDTO dto = new MemberDTO();
+			
+			for (MemberDTO memberDTO : members)
+			{
+				dto = memberDTO;
+			}
+			
+			
+			
+			// 사용자에게 보여지는 화면 처리 
+			System.out.println();
+			System.out.println("직원 수정 정보 입력 ---------------------------------------------------------");
+			System.out.printf("기존 이름 : %s\n", dto.getEmpname());
+			System.out.print("수정 이름 : ");
+			String empName = sc.next();
+			if(!empName.equals("-")) 
+				dto.setEmpname(empName);
+				
+			System.out.printf("기존 주민등록번호(yymmdd-nnnnnnn) : %s\n", dto.getSsn());
+			System.out.print("수정 주민번호(yymmdd-nnnnnnn) : ");
+			String ssn = sc.next();
+			if(!ssn.equals("-")) 
+				dto.setSsn(ssn);
+			
+			System.out.printf("기존 입사일(yyyy-mm-dd) : %s\n", dto.getIbsaDate());
+			System.out.print("수정 입사일(yyyy-mm-dd) : ");
+			String ibsaDate = sc.next();
+			if(!ibsaDate.equals("-")) 
+				dto.setIbsaDate(ibsaDate);
+			
+			System.out.printf("기존 지역 : %s\n", dto.getCityLoc());
+			System.out.printf("수정 지역(%s) : ", cityStr.toString());
+			String cityLoc = sc.next();
+			if(!cityLoc.equals("-")) 
+				dto.setCityLoc(cityLoc);
+			
+			System.out.printf("기존 전화번호 : %s\n", dto.getTel());
+			System.out.print("수정 전화번호 : ");
+			String tel = sc.next();
+			if(!tel.equals("-")) 
+				dto.setTel(tel);
+			
+			System.out.printf("기존 부서 : %s\n", dto.getBuseoName());
+			System.out.printf("수정 부서(%s) : ", buseoStr.toString());
+			String buseoName = sc.next();
+			if(!buseoName.equals("-")) 
+				dto.setBuseoName(buseoName);
+			
+			System.out.printf("기존 직위 : %s\n", dto.getJikwiName());
+			System.out.printf("수정 직위(%s) : ", jikwiStr.toString());
+			String jikwiName = sc.next();
+			if(!jikwiName.equals("-")) 
+				dto.setJikwiName(jikwiName);
+			
+			System.out.printf("기존 기본급 : %s\n", dto.getBasicPay());
+			System.out.printf("수정 기본급(최소 %d 이상) : ", dao.searchBasicPay(jikwiName));
+			String basicPay = sc.next();
+			if(!basicPay.equals("-")) 
+				dto.setBasicPay(Integer.parseInt(basicPay));
+			
+			System.out.printf("기존 수당 : %d\n", dto.getSudang());
+			System.out.print("수정 수당 : ");
+			String sudang = sc.next();
+			if(!sudang.equals("-")) 
+				dto.setSudang(Integer.parseInt(sudang));
+			
+			System.out.println();
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		
+		finally 
+		{
+			try
+			{	
+				dao.close();
+				
+			} catch (Exception e2)
+			{
+				System.out.println(e2.toString());
+			}
+		}
+	}
+	
+	
+	// 직원 정보 삭제
+	
+	
+}

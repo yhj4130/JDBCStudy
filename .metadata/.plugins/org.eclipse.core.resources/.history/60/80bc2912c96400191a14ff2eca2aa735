@@ -1,0 +1,28 @@
+package com.util;
+
+import java.sql.Connection;
+
+public class DBConn
+{
+	private static Connection dbConn;
+	
+	public static Connection getConnection()
+	{
+		if (dbConn == null)
+		{
+			try
+			{
+				String url = "jdbc:oracle:thin:@localhost:1521:xe";
+				String user = "scott";
+				String pwd = "tiger";
+				
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+			} catch (Exception e)
+			{
+				// TODO: handle exception
+			}
+			
+		}
+		return dbConn;
+	}
+}

@@ -1,0 +1,37 @@
+package com.test;
+
+import java.util.Scanner;
+
+public class MemberMain
+{
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		
+		try
+		{
+			MemberDAO dao = new MemberDAO();
+			
+			int count = dao.count();
+			
+			System.out.printf("이름 전화번호 입력(%d) : ", (++count));
+			String name = sc.next();
+			String tel = sc.next();
+			
+			// MemberDTO 객체 구성
+			MemberDTO dto = new MemberDTO();
+			dto.setName(name);
+			dto.setTel(tel);
+			
+			int result = dao.add(dto);
+			
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		} 
+		
+		
+		
+	}
+}

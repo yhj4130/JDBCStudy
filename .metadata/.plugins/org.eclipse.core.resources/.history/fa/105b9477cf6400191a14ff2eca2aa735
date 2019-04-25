@@ -1,0 +1,41 @@
+/*=====================
+   Test002.java
+   - 데이터베이스 연결
+   - 데이터 입력
+=====================*/
+
+package com.test;
+
+import java.sql.Connection;
+import java.sql.Statement;
+
+import com.util.DBConn;
+
+public class Test002
+{
+	public static void main(String[] args)
+	{
+		Connection conn = DBConn.getConnection();
+		
+		if (conn == null)
+		{
+			System.out.println("데이터베이스 연결 실패 !!!");
+			System.exit(0);
+		}
+		
+		//System.out.println("데이터베이스 연결 성공 !!!");
+		
+		try
+		{
+			// 작업 객체 준비
+			Statement stmt = conn.createStatement();
+			
+			// 쿼리문 준비
+			String sql = "INSERT INTO TBL_MEMBER(SID, NAME, TEL) VALUES(1, '조수연', '010-1111-1111');";
+			
+		} catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
+	}
+}
