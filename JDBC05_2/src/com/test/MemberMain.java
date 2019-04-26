@@ -207,7 +207,7 @@ public class MemberMain
 						break;
 					case 5:
 						// 직원 정보 삭제 메소드 호출
-						prc.memberRemove();
+						prc.memberDelete();
 						break;
 				}
 				

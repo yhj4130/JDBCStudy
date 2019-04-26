@@ -5,6 +5,7 @@
 
 package com.test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -497,17 +498,50 @@ public class MemberProcess
 	}
 
 	// 직원 정보 삭제
-	public void memberRemove()
+	public void memberDelete() throws ClassNotFoundException, SQLException
 	{
 		Scanner sc = new Scanner(System.in);
 
-		// 수정할 대상 입력받기
-		System.out.print("수정할 직원의 사원번호 입력 : ");
-		String value = sc.next();
-
 		try
 		{
-
+			// 삭제할 대상 입력받기
+			System.out.println();
+			System.out.print("삭제할 직원의 사원번호 입력 : ");
+			String value = sc.next();
+			
+			dao.connection();
+			dao.searchLists("EMP_ID", value);
+	        
+			
+			ArrayList<MemberDTO> members = dao.searchLists("EMP_ID", value);
+	         
+			if(members.size() > 0)
+			{
+				for (MemberDTO memberDTO : members)
+				{
+					System.out.printf("%3d %5s %5s %7s %4s %7s %4s %4s %9d %4d %4d\n", memberDTO.getEmpid(),
+							memberDTO.getEmpName(), memberDTO.getSsn(), memberDTO.getIbsaDate(), memberDTO.getCityLoc(),
+							memberDTO.getTel(), memberDTO.getBuseoName(), memberDTO.getJikwiName(), memberDTO.getBasicPay(),
+							memberDTO.getSudang(), memberDTO.getPay());
+				}
+				
+				System.out.print("정말 삭제하시겠습니까?(Y/N) : ");
+				String response  = sc.next();
+				
+				System.out.println();
+				
+				if(response.equals("Y") || response.equals("y"))
+				{
+	        		 int result = dao.remove(Integer.parseInt(value));
+	        		 if(result > 0)
+	        			 System.out.println("직원 정보가 정상적으로 삭제되었습니다.");
+				}
+	            
+			}else
+			{
+				System.out.println("삭제 대상을 검색하지 못하였습니다.");
+			}
+			
 		} catch (Exception e)
 		{
 			System.out.println(e.toString());
